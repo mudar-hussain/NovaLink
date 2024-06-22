@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/stickylinkz",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
