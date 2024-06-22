@@ -1,1 +1,57 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import "~ngx-toastr/toastr";
+
+
+:root {
+    --primary-color: #026467;
+    --secondary-color: aliceblue;;
+    --body-text-color: #596392;
+    --navbar-footer-color: #f9f9f9;
+    --loader-border-color: #04c7fd;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    color: var(--body-text-color);
+}
+
+.nav-link {
+    color: var(--primary-color);
+}
+
+.shadow-effect {
+    border: none;
+    box-shadow: 0px 0px 33px -10px rgba(71, 114, 254, 0.3);
+}
+
+.text-theme-primary{
+    color: var(--primary-color);
+}
+
+.bg-secondary-theme{
+    background-color: var(--secondary-color);
+}
+
+input[type = text], input[type = email] {
+    height: 40px;
+    padding-left: 20px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.btn-theme {
+    height: 50px;
+    width: auto;
+    border: none;
+    font-size: 15px;
+    background-color: var(--primary-color);
+}
+
+.bg-theme {
+    padding-bottom: 20px;
+    background-color: var(--primary-color);
+  }
