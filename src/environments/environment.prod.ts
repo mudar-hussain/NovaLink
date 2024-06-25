@@ -11,5 +11,7 @@ export const environment = {
   },
   linkedinProfileUrl: 'https://www.linkedin.com/in/mudar-hussain/',
   newsletterUrl: 'https://www.linkedin.com/newsletters/7189975110357790720/',
-  githubProfileUrl: 'https://github.com/mudar-hussain/'
+  githubProfileUrl: 'https://github.com/mudar-hussain/',
+  // domainUrl: 'https://stickylinkz.web.app/'
+  domainUrl: 'https://localhost:4200/'
 };

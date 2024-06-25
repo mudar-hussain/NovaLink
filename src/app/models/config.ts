@@ -1,5 +1,6 @@
 export interface ConfigData {
   newsletterUrl: string,
   linkedinProfileUrl: string,
-  githubProfileUrl: string
+  githubProfileUrl: string,
+  domainUrl: string
 }

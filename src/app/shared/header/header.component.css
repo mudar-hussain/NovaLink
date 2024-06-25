@@ -1,67 +1,106 @@
 header {
     height: 100px;
-    width: 100%
-  }
-  
-  .site-name {
-    font-size: 2em;
-    padding: 5px 20px;
-    border-radius: 20px;
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
-  }
-  
-  .btn-theme-connect {
+    width: 100%;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+}
+
+.title-window {
+    font-size: 3em;
+    line-height: 80px;
+}
+
+.title {
+    font-size: 1.5em;
+    line-height: 80px;
+}
+
+.btn-theme-connect {
     margin-top: auto;
     width: auto;
     background-color: var(--secondary-color);
     border-color: var(--primary-color);
     color: var(--primary-color);
-  }
-  
-  .hidden {
+}
+
+.hidden {
     display: none;
-  }
-  
-  .row {
+}
+
+.row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-right: 10px;
-  }
-  
-  .container {
+    color: var(--secondary-text-color);
+    background-color: var(--primary-color);
+}
+
+.container {
     flex: 1;
-  }
-  
-  .centered-row {
+}
+
+.centered-row {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     text-align: left;
     width: 100%;
-  }
-  
-  .left {
+    color: var(--secondary-text-color);
+    background-color: var(--primary-color);
+}
+
+.left {
     display: flex;
     text-align: left;
     align-items: center;
-  }
-  
-  .middle {
+}
+
+.middle {
     text-align: center;
     align-items: center;
     flex-wrap: nowrap;
     flex-shrink: 0;
+}
+
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.right a {
+    text-decoration: none;
+}
+
+.auth-buttons button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #e74c3c;
+    color: #ecf0f1;
+    cursor: pointer;
   }
-  
-  .right {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-  }
-  
-  .right a {
-      text-decoration: none;
+
+  .user-menu {
+    position: relative;
+
+    .user-icon {
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      right: 0;
+      background-color: #ecf0f1;
+      color: #2c3e50;
+      padding: 10px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
   }

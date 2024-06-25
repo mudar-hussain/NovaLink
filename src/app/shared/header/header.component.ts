@@ -1,4 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 import { ConfigService } from 'src/app/services/config.service';
 
 @Component({
@@ -7,14 +9,21 @@ import { ConfigService } from 'src/app/services/config.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
+  userData: any = '';
+  isLoggedIn$: Observable<boolean> | undefined;
   newsletterUrl: string = "#";
   linkedinProfileUrl: string = "#";
   githubProfileUrl: string = "#";
-  isWindow: boolean = window.innerWidth > 770 ? true : false;
+  isWindow: boolean = window.innerWidth > 630 ? true : false;
+  menuOpen = false;
 
-  constructor(private configService: ConfigService){}
+  constructor(private configService: ConfigService, private authService: AuthService){}
   
   ngOnInit(): void {
+    const user = sessionStorage.getItem('user');
+    if (user) this.userData = JSON.parse(user);
+
+    this.isLoggedIn$ = this.authService.isLoggedIn();
     this.newsletterUrl = this.configService.getNewsletterURL();
     this.linkedinProfileUrl = this.configService.getLinkedinProfileURL();
     this.githubProfileUrl = this.configService.getGithubProfileUrl();
@@ -22,6 +31,18 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.isWindow = event.target.innerWidth > 770 ? true : false;
+    this.isWindow = event.target.innerWidth > 630 ? true : false;
+  }
+
+  login(): void {}
+  signup(): void {}
+  logout(): void {
+    this.userData = null;
+    this.authService.logout();
+    this.menuOpen = false;
+  }
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
   }
 }

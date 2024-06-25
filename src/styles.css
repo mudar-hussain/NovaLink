@@ -2,15 +2,20 @@
 
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 @import "~ngx-toastr/toastr";
 
 
 :root {
-    --primary-color: #026467;
-    --secondary-color: aliceblue;;
-    --body-text-color: #596392;
+    --primary-color: #0e4653;
+    --secondary-color: #b98027;
+    --effect-color: #bfe7ef;
+    --primary-text-color: #000000;
+    --secondary-text-color: #FFFFFF;
+    --btn-text-color: #3C5A05;
+    --body-text-color: #0d0e11;
     --navbar-footer-color: #f9f9f9;
-    --loader-border-color: #04c7fd;
+    --loader-border-color: #bfe7ef;
 }
 
 body {
@@ -18,6 +23,10 @@ body {
     font-size: 12px;
     color: var(--body-text-color);
 }
+
+.lobster-font {
+    font-family: 'Lobster', cursive;
+  }
 
 .nav-link {
     color: var(--primary-color);
@@ -44,11 +53,28 @@ input[type = text], input[type = email] {
 }
 
 .btn-theme {
-    height: 50px;
-    width: auto;
-    border: none;
     font-size: 15px;
+    font-weight: 400;
+    border-radius: 11px;
+    color: var(--secondary-text-color);
     background-color: var(--primary-color);
+    border: solid 1px var(--primary-color);
+    border-bottom: solid 5px var(--primary-color);
+    transition: all .2s ease-in;  
+    cursor: pointer;
+}
+
+.btn-theme:hover:not(:disabled) {    
+    color: var(--primary-color);
+    background-color: var(--effect-color);
+}
+
+.btn-theme:disabled {    
+    color: var(--secondary-text-color);
+    background-color: var(--primary-color);
+    border: solid 1px var(--primary-color);
+    border-bottom: solid 5px var(--primary-color);
+    cursor: auto;
 }
 
 .bg-theme {

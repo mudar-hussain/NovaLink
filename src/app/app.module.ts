@@ -1,6 +1,6 @@
 import { NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,19 +15,32 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { UrlshortenerComponent } from './shared/urlshortener/urlshortener.component';
+import { BookmarkComponent } from './shared/bookmark/bookmark.component';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+    DashboardComponent,
+    UrlshortenerComponent,
+    BookmarkComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
+    ClipboardModule,
+    ReactiveFormsModule,
     ToastrModule.forRoot()
   ],
   providers: [

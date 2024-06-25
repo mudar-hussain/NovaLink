@@ -1,0 +1,76 @@
+/* app.component.css */
+.container {
+    text-align: center;
+  }
+  
+  h1 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 1.2em;
+    color: var(--body-text-color);
+  }
+  
+  .url-input-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .url-input-container input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .url-input-container button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #2c3e50;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .url-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+  }
+  
+  .url-short {
+    font-weight: bold;
+    color: #2980b9;
+  }
+  
+  .url-long {
+    color: #2c3e50;
+  }
+  
+  .url-actions button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .stats-btn {
+    background-color: #95a5a6;
+    color: white;
+  }
+  
+  .edit-btn {
+    background-color: #e67e22;
+    color: white;
+  }
+  
+  .copy-btn {
+    background-color: #2c3e50;
+    color: white;
+  }
+  
