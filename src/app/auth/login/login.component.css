@@ -1,0 +1,64 @@
+.modal {
+    padding-bottom: 30px;
+    border-radius: 50px;
+    margin-top: 10px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    color: var(--secondary-text-color);
+    background-color: var(--primary-color);
+    padding: 10px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}
+
+.title {    
+    font-size: 2em;
+    margin-left: auto;
+}
+
+.left {
+    display: flex;
+    text-align: left;
+    align-items: center;
+}
+
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.right a {
+    text-decoration: none;
+}
+
+h4 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+  }
+
+input {
+    border-radius: 11px;
+}
+
+.btn {
+    border-radius: 20px;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .text-danger {
+    font-size: 0.875rem;
+  }
+
+  

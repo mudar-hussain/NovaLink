@@ -1,1 +1,67 @@
-<p>login works!</p>
+<!-- src/app/app.component.html -->
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="container left">
+          <img src="../../../assets/img/logo.png" alt="Sticky Linkz Logo" class="logo"
+            style="width: 60px; height:60px;">
+          <div class="lobster-font title">Sticky Linkz</div>
+        </div>
+
+        <div class="container right">
+          <button type="button" class="close ml-auto btn-theme-primary" data-dismiss="modal" aria-label="Close"
+            style="font-size: large;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <h4 class="text-center mb-2">{{action}}</h4>
+        <!-- <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fas fa-exclamation-circle"></i> Invalid username or password
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div> -->
+        <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+          <div class="form-group mb-3" *ngIf="action === 'Sign Up'">
+            <input type="text" class="form-control" id="name" name="name" ngModel required placeholder="Name" #name="ngModel">
+            <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+              Name is required.
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <input type="email" class="form-control" id="email" name="email" ngModel required email placeholder="Email"
+              #email="ngModel">
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+              Valid email is required.
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <input type="password" class="form-control" id="password" name="password" ngModel required password
+              placeholder="Password" #password="ngModel">
+            <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+              Password is required.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-theme-secondary w-100">{{action}}</button>
+        </form>
+        <!-- <div class="text-center mt-3">
+            <span>OR</span>
+          </div> -->
+        <div class="text-center mt-3 d-flex align-items-center">
+          <div class="flex-grow-1 border-bottom"></div>
+          <span class="px-2">OR</span>
+          <div class="flex-grow-1 border-bottom"></div>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+          <app-google-signin-btn></app-google-signin-btn>
+        </div>
+        <!-- <button type="button" class="btn btn-outline-primary w-100 mt-2" (click)="loginWithGoogle()">
+            <img src="path-to-google-logo.png" alt="Google Logo" class="google-logo"> Continue with Google
+        </button> -->
+      </div>
+    </div>
+  </div>
+</div>

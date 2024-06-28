@@ -6,9 +6,8 @@ export interface UrlData {
     short_url: string,
     active: boolean,
     email: string | null,
-    description: string | null,
+    notes: string | null,
     expire_at_datetime: Timestamp | null,
-    expire_at_views: number | null,
     created_at: Timestamp,
     updated_at: Timestamp,
     id: string | null

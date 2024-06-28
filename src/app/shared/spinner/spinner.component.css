@@ -1,0 +1,14 @@
+.modal.fade {
+    display: none;
+  }
+  .modal.show.d-block {
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .fa {
+    color: var(--primary-effect-color);
+    /* color: #000; */
+    font-weight: bold;
+    font-size: 5rem;
+  }
+  

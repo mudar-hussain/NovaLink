@@ -1,0 +1,20 @@
+.modal {
+    text-align: left;
+}
+.modal-title {
+    color: var(--secondary-color);
+}
+
+.btn-close {
+    padding: 2px 10px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 300;
+    font-stretch: expanded;
+}
+
+.btn-theme-primary, .btn-theme-secondary {
+    padding: 4px 10px;
+}

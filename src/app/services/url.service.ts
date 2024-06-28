@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collectionData } from '@angular/fire/firestore';
+import { Firestore, collectionData, deleteDoc } from '@angular/fire/firestore';
 import { UrlData } from '../models/urlData';
 import { DocumentData, addDoc, collection, doc, limit, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { ToastrService } from 'ngx-toastr';
@@ -49,6 +49,23 @@ export class UrlService {
     return updateDoc(urlUpdateInstance, urlData);
   }
 
+  deleteUrl(id: string) {
+    const urlDeleteInstance = doc(this.firestore, 'url_map', id);
+    return deleteDoc(urlDeleteInstance);
+  }
+
+  getAllUrlByEmail(email: string): Observable<UrlData[]> {
+    const urlMapQuery = query(
+      this.urlMapInstance,
+      where('email', '==', email),
+      orderBy('active', 'desc'),
+      orderBy('updated_at', 'desc')
+    );
+    return this.mapCollectionDataToUrlDataList(
+      collectionData(urlMapQuery, { idField: 'id' })
+    );
+  }
+
   getUrlDataByShortId(short_id: string): Observable<UrlData[]> {
     const urlMapQuery = query(
       this.urlMapInstance,
@@ -76,7 +93,7 @@ export class UrlService {
       short_url: urlData.short_url,
       active: urlData.active,
       email: urlData.email,
-      description: urlData.description,
+      notes: urlData.notes,
       expire_at_datetime: urlData.expire_at_datetime,
       expire_at_views: urlData.expire_at_views,
       created_at: urlData.created_at,

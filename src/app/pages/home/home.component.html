@@ -1,22 +1,47 @@
 <div class="container">
-    <h1 class="heading">Make URLs Short and Crisp.</h1>
-    <p>
-      <span class="lobster-font">Sticky Linkz</span> 
-      : The ultimate link shortener for tracking, branding, and sharing the shortest URLs in the world!
-    </p>
-     <!-- Url Input container -->
-      <app-urlshortener (shortenedUrlData)="shortenedUrlData($event)"></app-urlshortener>
+  <h1 class="heading">Make URLs Short and Crisp</h1>
+  <p>
+    <span class="lobster-font">Sticky Linkz</span>
+    : The ultimate link shortener for tracking, branding, and sharing the shortest URLs in the world!
+  </p>
+  <!-- Url Input container -->
+  <app-urlshortener (shortenedUrlData)="shortenedUrlData($event)"></app-urlshortener>
 
-      <!-- URL list container -->
-       <ng-container *ngIf="shortenedUrls.length > 0">
-      <div *ngFor="let url of shortenedUrls" class="url-item">
-        <div class="url-short">{{ url.short_url }}</div>
-        <div class="url-long">{{ url.long_url }}</div>
-        <div class="url-actions">
-          <button class="stats-btn">Stats</button>
-          <button class="edit-btn">Edit</button>
-          <button class="copy-btn" (click)="copyToClipboard('Link Copied', url.short_url)">Copy Link</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
+  <!-- URL list container -->
+  <ng-container *ngIf="shortenedUrlList.length > 0">
+    
+<div class="container mt-5 mb-5">
+
+  <table class="table">
+    <tr>
+      <th>Shortened URL</th>
+      <th>Original URL</th>
+      <th>Active</th>
+      <th>Expires At</th>
+      <th>Actions</th>
+    </tr>
+
+      <tr *ngFor="let url of shortenedUrlList">
+        <td>{{url.short_url}}</td>
+        <td>{{url.long_url}}</td>
+        <td [ngStyle]="{'color': url.active ? 'green' : 'red'}"><i class="fas fa-circle"></i></td>
+        <td>{{this.utils.convertToLocaleDateTime(url.expire_at_datetime)}}</td>
+        <td>
+          <div class="url-actions">
+            <button class="btn btn-theme-primary" (click)="shareUrl(url)" data-toggle="tooltip" data-placement="top"
+              title="Share"><i class="fas fa-share"></i></button>
+            <button class="btn btn-theme-primary" (click)="editUrl(url)" data-toggle="tooltip" data-placement="top"
+              title="Edit"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-theme-primary" (click)="copyUrlToClipboard('Link Copied', url.short_url)"
+              data-toggle="tooltip" data-placement="top" title="Copy"><i class="fas fa-copy"></i></button>
+            <button class="btn btn-theme-primary" (click)="deleteUrl(url)" data-toggle="tooltip" data-placement="top"
+              title="Delete"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </td>
+      </tr>
+  </table>
+</div>
+  </ng-container>
+</div>
+
+<app-bookmark></app-bookmark>

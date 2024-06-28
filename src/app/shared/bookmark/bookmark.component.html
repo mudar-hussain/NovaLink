@@ -1,1 +1,96 @@
-<p>bookmark works!</p>
+<div class="container">
+  <h1 class="heading">Make URLs Short and Crisp</h1>
+  <p>
+    <span class="lobster-font">Sticky Linkz</span>
+    : The ultimate link shortener for tracking, branding, and sharing the
+    shortest URLs in the world!
+  </p>
+
+  <!-- Button trigger modal -->
+  <button
+    type="button"
+    class="btn-theme-secondary"
+    data-toggle="modal"
+    data-target="#urlFormModal"
+    (click)="openModal('Shorten', null)"
+  >
+    Shorten New URL >
+  </button>
+
+  <!-- URL list container -->
+  <ng-container *ngIf="urlList.length > 0">
+    <div class="container mt-5 mb-5">
+      <table class="table">
+        <tr>
+          <th>Shortened URL</th>
+          <th>Original URL</th>
+          <th>Notes</th>
+          <th>Active</th>
+          <th>Expires At</th>
+          <th>Actions</th>
+        </tr>
+
+        <tr *ngFor="let url of urlList">
+          <td>{{ url.short_url }}</td>
+          <td>{{ url.long_url }}</td>
+          <td>{{ url.notes }}</td>
+          <td [ngStyle]="{ color: url.active ? 'green' : 'red' }">
+            <i class="fas fa-circle"></i>
+          </td>
+          <td>
+            {{ this.utils.convertToLocaleDateTime(url.expire_at_datetime) }}
+          </td>
+          <td>
+            <div class="url-actions">
+              <button
+                class="btn btn-theme-primary"
+                (click)="shareUrl(url)"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Share"
+              >
+                <i class="fas fa-share"></i>
+              </button>
+              <button
+                class="btn btn-theme-primary"
+                (click)="editUrl(url)"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-toggle="modal"
+                data-target="#urlFormModal"
+                title="Edit"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="btn btn-theme-primary"
+                (click)="copyUrlToClipboard('Link Copied', url.short_url)"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Copy"
+              >
+                <i class="fas fa-copy"></i>
+              </button>
+              <button
+                class="btn btn-theme-primary"
+                (click)="deleteUrl(url)"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Delete"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Modal -->
+<app-url-form
+  [action]="this.action"
+  [urlData]="this.urlData"
+  (close)="closeModal()"
+></app-url-form>

@@ -4,7 +4,7 @@
             <input type="text" class="form-control" placeholder="Enter a link to shorten it..." formControlName="url"
                 [ngClass]="{'is-invalid': url?.touched && url?.invalid}">
             <div class="input-group-append">
-                <button class="btn btn-info btn-block btn-theme" [disabled]="urlForm.invalid">Shorten URL ></button>
+                <button class="btn btn-info btn-block btn-theme-primary" [disabled]="urlForm.invalid">Shorten URL ></button>
             </div>
         </div>
     </div>

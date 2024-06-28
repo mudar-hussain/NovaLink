@@ -9,7 +9,6 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./urlshortener.component.css']
 })
 export class UrlshortenerComponent implements OnInit {
-  urlPattern = /^(https?:\/\/)?((([a-zA-Z0-9$_.+!*'(),;?&=-]|%[0-9a-fA-F]{2})+(:([a-zA-Z0-9$_.+!*'(),;?&=-]|%[0-9a-fA-F]{2})+)?@)?((([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+)|(\d{1,3}\.){3}\d{1,3}|(\[IPv6:[0-9a-fA-F:]+\]))(:\d+)?)(\/([a-zA-Z0-9$_.+!*'(),;:@&=/-]|%[0-9a-fA-F]{2})*)?(\?([a-zA-Z0-9$_.+!*'(),;:@&=/-]|%[0-9a-fA-F]{2})*)?(#([a-zA-Z0-9$_.+!*'(),;:@&=/-]|%[0-9a-fA-F]{2})*)?)$/;
       
   urlForm!: FormGroup;
   @Output() shortenedUrlData = new EventEmitter<string>();
@@ -19,7 +18,7 @@ export class UrlshortenerComponent implements OnInit {
 
   ngOnInit(): void {
   this.urlForm = this.formBuilder.group({
-      url: ['', [Validators.required, Validators.pattern(this.urlPattern)]]
+      url: ['', [Validators.required, Validators.pattern(this.utils.getUrlRegexPattern())]]
     });
     
   }
@@ -32,6 +31,8 @@ export class UrlshortenerComponent implements OnInit {
     console.log(this.urlForm)
     if(this.urlForm.valid) {
       this.shortenedUrlData.emit(this.urlForm.get('url')?.value);
+      this.urlForm.get('url')?.setValue(null);
+      this.urlForm.markAsUntouched();
     } else {
       console.log('URL Invalid');
     }

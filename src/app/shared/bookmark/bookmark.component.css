@@ -1,0 +1,51 @@
+.container {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  h1 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 1.2em;
+    color: var(--body-text-color);
+  }
+
+.title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--primary-effect-text-color);
+}
+
+.heading {
+    text-wrap: nowrap;
+    color: var(--primary-color);
+}
+
+.left {
+    display: flex;
+    text-align: left;
+    align-items: center;
+}
+
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.url-actions button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-theme-primary, .btn-theme-secondary {
+    padding: 6px 10px;
+}
+

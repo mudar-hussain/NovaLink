@@ -1,7 +1,12 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { FirebaseApp } from '@angular/fire/compat';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfigService } from 'src/app/services/config.service';
+// import firebase from 'firebase/compat';
+// import firebase from '@angular/FirebaseApp/compat';
+import { GoogleAuthProvider } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-header',
@@ -16,12 +21,14 @@ export class HeaderComponent implements OnInit {
   githubProfileUrl: string = "#";
   isWindow: boolean = window.innerWidth > 630 ? true : false;
   menuOpen = false;
+  action: string = "Sign Up";
 
-  constructor(private configService: ConfigService, private authService: AuthService){}
+  constructor(private configService: ConfigService, 
+    private authService: AuthService,
+    public auth: AngularFireAuth,
+  private firebase: FirebaseApp){}
   
   ngOnInit(): void {
-    const user = sessionStorage.getItem('user');
-    if (user) this.userData = JSON.parse(user);
 
     this.isLoggedIn$ = this.authService.isLoggedIn();
     this.newsletterUrl = this.configService.getNewsletterURL();
@@ -34,9 +41,15 @@ export class HeaderComponent implements OnInit {
     this.isWindow = event.target.innerWidth > 630 ? true : false;
   }
 
-  login(): void {}
-  signup(): void {}
+  login(): void {
+    this.action = "Log In";
+    // this.authService.login();
+  }
+  signup(): void {
+    this.action = "Sign Up";
+  }
   logout(): void {
+    this.action = "Log In";
     this.userData = null;
     this.authService.logout();
     this.menuOpen = false;

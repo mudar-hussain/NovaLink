@@ -1,4 +1,4 @@
-<header class="fixed-top bg-white">
+<header>
     <div [ngClass]="{'centered-row': !isWindow, 'row': isWindow}">
       <div class="container left">
         <a href="#" class="btn">
@@ -10,8 +10,16 @@
       <div class="container right">
         
     <div class="auth-buttons" *ngIf="!userData">
-        <button (click)="login()">Login</button>
-        <button (click)="signup()">Sign Up</button>
+        <button class="btn-theme-primary" (click)="login()"
+        data-toggle="tooltip" data-placement="top" 
+        data-toggle="modal"
+        data-target="#authModal" title="Login with Google"
+        > Log In </button>
+        <button class="btn-theme-secondary ml-2" (click)="signup()"
+        data-toggle="tooltip" data-placement="top" 
+        data-toggle="modal"
+        data-target="#authModal"title="Sign Up with Google"
+        > Sign Up </button>
       </div>
       <div class="user-menu" *ngIf="userData">
         <img [src]="userData.photoURL" alt="User Image" class="user-icon" (click)="toggleMenu()">
@@ -24,3 +32,7 @@
       </div>
     </div>
   </header>
+
+  <!-- Utilities -->
+  <app-login [action]="this.action"></app-login>
+<app-spinner></app-spinner>
