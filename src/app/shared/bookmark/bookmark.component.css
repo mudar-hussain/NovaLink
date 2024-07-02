@@ -49,3 +49,21 @@
     padding: 6px 10px;
 }
 
+
+.truncated-text {
+  position: relative;
+  max-height: 3em; /* Two lines of text */
+  line-height: 1.5em; /* Adjust this based on your text line height */
+  overflow: hidden;
+}
+
+.truncated-text::before {
+  content: '...';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: white; /* Adjust based on your background color */
+  padding-left: 0.5em; /* Space between text and ellipsis */
+}
+
+

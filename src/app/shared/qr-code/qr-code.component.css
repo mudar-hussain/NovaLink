@@ -40,6 +40,11 @@
     text-decoration: none;
 }
 
+h4 {
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+  }
+
 input {
     border-radius: 11px;
 }
@@ -47,12 +52,4 @@ input {
 .btn {
     border-radius: 20px;
 }
-
-.border-bottom {
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .text-danger {
-    font-size: 0.875rem;
-  }
   

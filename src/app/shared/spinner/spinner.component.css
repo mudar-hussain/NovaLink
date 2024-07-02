@@ -11,4 +11,8 @@
     font-weight: bold;
     font-size: 5rem;
   }
-  
+
+  .modal {
+    z-index: 2050; /* Ensure this is higher than other modals */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  }

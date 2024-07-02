@@ -1,0 +1,57 @@
+<!-- src/app/app.component.html -->
+<div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="container left">
+            <img src="../../../assets/img/logo.png" alt="Sticky Linkz Logo" class="logo"
+              style="width: 60px; height:60px;">
+            <div class="lobster-font title">Sticky Linkz</div>
+          </div>
+  
+          <div class="container right">
+            <button id="closeModal" type="button" class="close ml-auto btn-theme-primary" data-dismiss="modal" aria-label="Close"
+              style="font-size: large;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center mb-3">Download QR Code</h4>
+          <div>
+            <div class="form-group mb-2">
+                <input type="text" [(ngModel)]="qrCodeValue" placeholder="" disabled>
+            </div>
+            <button *ngIf="!qrCodeImage" class="btn btn-theme-secondary w-100" (click)="generateQRCode()">Generate QR Code</button>
+          </div>
+          
+          <div class="text-center" *ngIf="qrCodeImage && qrCodeValue">
+            <qrcode #qrcode [qrdata]="qrCodeValue" [width]="256" [errorCorrectionLevel]="'M'" elementType="img" ></qrcode>
+            <div>
+                <select [(ngModel)]="selectedFormat" class="custom-select custom-select-lg mb-3">
+                    <option selected disabled value="#">Select Format</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="png">PNG</option>
+                  </select>
+              <button class="btn btn-theme-secondary w-100" (click)="downloadQRCode()"
+              [disabled]="selectedFormat=='#'">Download</button>
+            </div>
+          </div>
+          
+
+
+          <!-- <form #shareUrlForm="ngForm" (ngSubmit)="onSubmit(shareUrlForm)">
+            <div class="form-group mb-3">
+              <input type="email" class="form-control" name="email" ngModel required email placeholder="Email"
+                #email="ngModel">
+              <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+                <div *ngIf="email.errors?.['required']">Email is required.</div>
+                <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-theme-secondary w-100" [disabled]="shareUrlForm.invalid">Share ></button>
+          </form> -->
+        </div>
+      </div>
+    </div>
+  </div>

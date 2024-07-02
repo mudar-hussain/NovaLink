@@ -1,12 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FirebaseApp } from '@angular/fire/compat';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfigService } from 'src/app/services/config.service';
-// import firebase from 'firebase/compat';
-// import firebase from '@angular/FirebaseApp/compat';
-import { GoogleAuthProvider } from '@angular/fire/auth';
+import { Auth } from 'src/app/models/auth.enum';
 
 @Component({
   selector: 'app-header',
@@ -14,24 +10,18 @@ import { GoogleAuthProvider } from '@angular/fire/auth';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  userData: any = '';
-  isLoggedIn$: Observable<boolean> | undefined;
-  newsletterUrl: string = "#";
   linkedinProfileUrl: string = "#";
   githubProfileUrl: string = "#";
   isWindow: boolean = window.innerWidth > 630 ? true : false;
   menuOpen = false;
-  action: string = "Sign Up";
+  action: string = Auth.signup;
+  isDropdownVisible = false;
 
   constructor(private configService: ConfigService, 
-    private authService: AuthService,
-    public auth: AngularFireAuth,
-  private firebase: FirebaseApp){}
+    protected authService: AuthService,
+    public auth: AngularFireAuth){}
   
   ngOnInit(): void {
-
-    this.isLoggedIn$ = this.authService.isLoggedIn();
-    this.newsletterUrl = this.configService.getNewsletterURL();
     this.linkedinProfileUrl = this.configService.getLinkedinProfileURL();
     this.githubProfileUrl = this.configService.getGithubProfileUrl();
   }
@@ -42,20 +32,23 @@ export class HeaderComponent implements OnInit {
   }
 
   login(): void {
-    this.action = "Log In";
-    // this.authService.login();
+    this.action = Auth.login;
   }
   signup(): void {
-    this.action = "Sign Up";
+    this.action = Auth.signup;
   }
   logout(): void {
-    this.action = "Log In";
-    this.userData = null;
+    this.action = Auth.login;
     this.authService.logout();
-    this.menuOpen = false;
+  }
+  
+  toggleDropdown(event: MouseEvent): void {
+    event.stopPropagation();
+    this.isDropdownVisible = !this.isDropdownVisible;
   }
 
-  toggleMenu(): void {
-    this.menuOpen = !this.menuOpen;
+  @HostListener('document:click')
+  closeDropdown(): void {
+    this.isDropdownVisible = false;
   }
 }

@@ -1,6 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Auth } from 'src/app/models/auth.enum';
 import { AuthService } from 'src/app/services/auth.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-login',
@@ -9,30 +12,39 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent {
 
-  @Input() action: string = "Log In";
+  @Input() action: string = Auth.login;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private utils: UtilsService) { }
 
   onSubmit(form: NgForm) {
     const email = form.value.email;
-    const password = form.value.password;
-    if (this.action == "Sign Up") {
+    if (this.action == Auth.signup) {
       const name = form.value.name;
-      this.authService.register(email, name, password);
-    } else {
-      this.authService.login(email, password);
+      const password = form.value.password;
+      this.authService.registerWithEmailAndPassword(email, name, password);
+    } else if (this.action == Auth.login) {
+      const password = form.value.password;
+      this.authService.loginWithEmailAndPassword(email, password);
+    } else if (this.action == Auth.forgotPassword) {
+      this.authService.sendPasswordResetEmail(email);
+      this.action = Auth.login;
     }
+
   }
 
   loginWithGoogle() {
-    this.authService.loginWithGoogle();
+    this.authService.loginWithGoogleAuth();
   }
 
   toggleAction() {
-    if (this.action == "Sign Up") {
-      this.action = "Log In";
+    if (this.action == Auth.login) {
+      this.action = Auth.signup;
     } else {
-      this.action = "Sign Up";
+      this.action = Auth.login;
     }
+  }
+
+  forgotPassword() {
+    this.action = Auth.forgotPassword;
   }
 }

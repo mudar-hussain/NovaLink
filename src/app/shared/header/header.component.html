@@ -1,38 +1,49 @@
 <header>
-    <div [ngClass]="{'centered-row': !isWindow, 'row': isWindow}">
-      <div class="container left">
-        <a href="#" class="btn">
-          <img class="logo" src="../../../../assets/img/logo.png" alt="Sticky Linkz">
-        </a>
-        <div class="lobster-font" [ngClass]="{'title': !isWindow, 'title-window': isWindow}">Sticky Linkz</div>
-        
+  <div [ngClass]="{'centered-row': !isWindow, 'row': isWindow}">
+    <div class="container left">
+      <a href="#" class="btn">
+        <img class="logo" src="../../../../assets/img/logo.png" alt="Sticky Linkz">
+      </a>
+      <div class="lobster-font" [ngClass]="{'title': !isWindow, 'title-window': isWindow}">Sticky Linkz</div>
+
+    </div>
+    <div class="container right">
+      <div class="auth-buttons" *ngIf="!this.authService.isLoggedIn">
+        <button class="btn-theme-primary" (click)="login()" data-toggle="tooltip" data-placement="top"
+          data-toggle="modal" data-target="#authModal" title="Log In"> Log In </button>
+        <button class="btn-theme-secondary ml-2" (click)="signup()" data-toggle="tooltip" data-placement="top"
+          data-toggle="modal" data-target="#authModal" title="Sign Up"> Sign Up </button>
       </div>
-      <div class="container right">
-        
-    <div class="auth-buttons" *ngIf="!userData">
-        <button class="btn-theme-primary" (click)="login()"
-        data-toggle="tooltip" data-placement="top" 
-        data-toggle="modal"
-        data-target="#authModal" title="Login with Google"
-        > Log In </button>
-        <button class="btn-theme-secondary ml-2" (click)="signup()"
-        data-toggle="tooltip" data-placement="top" 
-        data-toggle="modal"
-        data-target="#authModal"title="Sign Up with Google"
-        > Sign Up </button>
-      </div>
-      <div class="user-menu" *ngIf="userData">
-        <img [src]="userData.photoURL" alt="User Image" class="user-icon" (click)="toggleMenu()">
-        <div class="user-dropdown" *ngIf="menuOpen">
-          <p>{{ userData.displayName }}</p>
-          <p>{{ userData.email }}</p>
-          <button (click)="logout()">Logout</button>
+      <div class="auth-buttons" *ngIf="this.authService.isLoggedIn">
+
+      <div class="dropdown">
+        <div class="d-flex align-items-center" (click)="toggleDropdown($event)">
+          <img *ngIf="authService.UserData?.providerData?.photoURL" [src]="authService.UserData?.providerData?.photoURL"
+          alt="User Image" class="profile-picture">
+          <div *ngIf="!authService.UserData?.providerData?.photoURL" class="profile-picture btn-theme-secondary"
+            >
+            <span class="initials">{{ this.authService.UserData?.displayName.charAt(0).toUpperCase() }}</span>
+          </div>
+          <span class="display-name btn-theme-primary" *ngIf="isWindow">{{ this.authService.UserData?.displayName }} <i class="fas fa-caret-down"></i> </span>
+        </div>
+
+        <div class="dropdown-content" *ngIf="isDropdownVisible">
+          <a routerLink="/dashboard">Dashboard</a>
+          <a data-toggle="modal" data-target="#resetPasswordModal">Reset Password</a>
+          <a (click)="logout()">Logout</a>
         </div>
       </div>
-      </div>
-    </div>
-  </header>
 
-  <!-- Utilities -->
-  <app-login [action]="this.action"></app-login>
+
+
+    </div>
+  </div>
+  </div>
+
+</header>
+
+
+<!-- Utilities -->
+<app-login [action]="this.action"></app-login>
 <app-spinner></app-spinner>
+<app-reset-password></app-reset-password>

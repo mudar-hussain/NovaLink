@@ -16,9 +16,13 @@
   >
     Shorten New URL >
   </button>
-
+  <button
+  type="button"
+  class="btn-theme-primary ml-3"
+  (click)="updateUrlList()"
+  ><i class="fas fa-redo-alt"></i></button>
   <!-- URL list container -->
-  <ng-container *ngIf="urlList.length > 0">
+  
     <div class="container mt-5 mb-5">
       <table class="table">
         <tr>
@@ -31,10 +35,10 @@
         </tr>
 
         <tr *ngFor="let url of urlList">
-          <td>{{ url.short_url }}</td>
-          <td>{{ url.long_url }}</td>
-          <td>{{ url.notes }}</td>
-          <td [ngStyle]="{ color: url.active ? 'green' : 'red' }">
+          <td data-toggle="tooltip" data-placement="top" [title]="url.short_url">{{ url.short_url }}</td>
+          <td data-toggle="tooltip" data-placement="top" [title]="url.long_url">{{ this.utils.truncateText(url.long_url, 20) }}</td>
+          <td data-toggle="tooltip" data-placement="top" [title]="url.notes">{{ this.utils.truncateText(url.notes, 50) }}</td>
+          <td [ngStyle]="{'color': this.urlService.isUrlActive(url) ? 'green' : 'red'}">
             <i class="fas fa-circle"></i>
           </td>
           <td>
@@ -44,9 +48,22 @@
             <div class="url-actions">
               <button
                 class="btn btn-theme-primary"
+                (click)="generateQrCode(url)"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-toggle="modal"
+                data-target="#qrCodeModal"
+                title="QR Code"
+              >
+              <i class="fas fa-qrcode"></i>
+              </button>
+              <button
+                class="btn btn-theme-primary"
                 (click)="shareUrl(url)"
                 data-toggle="tooltip"
                 data-placement="top"
+                data-toggle="modal"
+                data-target="#shareUrlModal"
                 title="Share"
               >
                 <i class="fas fa-share"></i>
@@ -83,14 +100,19 @@
             </div>
           </td>
         </tr>
+        <ng-container *ngIf="urlList.length === 0"><p>No Records Found</p></ng-container>
       </table>
     </div>
-  </ng-container>
 </div>
 
 <!-- Modal -->
 <app-url-form
   [action]="this.action"
   [urlData]="this.urlData"
+  (shortenedUrlData)="shortenedUrlData($event)"
+  (updateUrlData)="updateUrlData($event)"
   (close)="closeModal()"
 ></app-url-form>
+
+<app-share-url [urlData]="this.urlData"></app-share-url>
+<app-qr-code [qrCodeValue]="this.urlData?.short_url || ''"></app-qr-code>

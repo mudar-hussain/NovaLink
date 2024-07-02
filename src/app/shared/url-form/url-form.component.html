@@ -1,9 +1,9 @@
-<div class="modal fade" id="urlFormModal" tabindex="-1" aria-labelledby="urlFormModalLabel" aria-hidden="true">
+<div class="modal fade" id="urlFormModal" tabindex="-1" role="dialog" aria-labelledby="urlFormModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="urlFormModalLabel">{{action}} URL</h5>
-                <button type="button" class="btn-close btn-theme-primary" data-dismiss="modal" aria-label="Close" 
+                <button id="closeModal" type="button" class="btn-close btn-theme-primary" data-dismiss="modal" aria-label="Close" 
                 (click)="onExit()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -20,22 +20,16 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="short_url" class="form-label">Short URL</label>
-                        <input type="text" id="short_url" class="form-control" formControlName="short_url">
-                    </div>
-                    <div class="mb-3">
                         <label for="active" class="form-label" aria-required="true">Active<span class="text-danger">*</span></label>
                         <div>
-                            <input type="radio" id="active_true" [value]="true" formControlName="active"> Yes
-                            <input type="radio" id="active_false" [value]="false" formControlName="active"> No
+                            <input type="radio" id="active_true" [value]="true" formControlName="active"> 
+                            <span class="ml-1">Yes</span>
+                            <input class="ml-2" type="radio" id="active_false" [value]="false" formControlName="active"> 
+                            <span class="ml-1">No</span>
                         </div>
                         <div *ngIf="urlForm.controls['active'].invalid && (urlForm.controls['active'].dirty || urlForm.controls['active'].touched)">
                             <small class="text-danger" *ngIf="urlForm.get('active')?.errors?.['required']">Active status is required.</small>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-                        <input type="email" id="email" class="form-control" formControlName="email">
                     </div>
                     <div class="mb-3">
                         <label for="notes" class="form-label">Notes</label>

@@ -12,7 +12,8 @@ export class ConfigService implements OnInit {
     newsletterUrl: environment.newsletterUrl,
     linkedinProfileUrl: environment.linkedinProfileUrl,
     githubProfileUrl: environment.githubProfileUrl,
-    domainUrl: environment.domainUrl
+    domainUrl: environment.domainUrl,
+    defaultProfilePic: environment.defaultProfilePic
   }
 
   constructor(private firestore: Firestore) { 
@@ -56,5 +57,9 @@ export class ConfigService implements OnInit {
 
   getDomainUrl() {
     return this.configData.domainUrl;
+  }
+
+  getDefaultProfilePic(firstLetter: string) {
+    return this.configData.defaultProfilePic + firstLetter;
   }
 }

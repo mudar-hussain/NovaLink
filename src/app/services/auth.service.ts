@@ -1,140 +1,169 @@
 import { Injectable } from '@angular/core';
-import { Auth,
+import {
+  Auth,
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  signInWithRedirect,
   signOut,
   updateProfile,
- } from '@angular/fire/auth';
+} from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, Observable, from } from 'rxjs';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
 import { UtilsService } from './utils.service';
-
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isLoggedInGaurd: boolean = false;
+  public UserData: any;
+  private userDataSubject = new BehaviorSubject<any>(null);
+  private logoutSubject = new Subject<void>();
 
   constructor(
     private firebaseAuth: Auth,
     private toastr: ToastrService,
     private router: Router,
     private utils: UtilsService
-  ) { }
-
-  register(
-    email: string,
-    name: string,
-    password: string
-  ): Observable<void> {
-    const promise = createUserWithEmailAndPassword(
-      this.firebaseAuth,
-      email,
-      password
-    ).then((response) => {
-      updateProfile(response.user, { displayName: name });
-      this.setUserData();
-      this.toastr.success('Registered Sucessfully');
-      this.router.navigate(['/']);
-    }
-    );
-    return from(promise);
+  ) {
+    onAuthStateChanged(this.firebaseAuth, (user: any) => {
+      if (user) {
+        this.UserData = user;
+        localStorage.setItem('user', JSON.stringify(this.UserData));
+        this.userDataSubject.next(this.UserData);
+        // Optionally check token expiration and refresh
+        // this.refreshTokenIfNeeded(user);
+      } else {
+        localStorage.setItem('user', 'null');
+        this.userDataSubject.next(null);
+        this.router.navigate(['']); // Redirect to home page
+        this.logoutSubject.next(); // Emit logout event
+      }
+      this.utils.closeLoginModal();
+    });
   }
 
-  login(email: string, password: string): Observable<void> {
+  private async refreshTokenIfNeeded(user: User): Promise<void> {
+    try {
+      const idTokenResult = await user.getIdTokenResult();
+      const expirationTime = new Date(idTokenResult.expirationTime).getTime();
+      if (expirationTime < Date.now()) {
+        await user.getIdToken(true);
+      }
+    } catch (error) {
+      console.error('Error refreshing token:', error);
+    }
+  }
+
+  sendEmailVerification(): Promise<void> {
+    return sendEmailVerification(this.getAuthFireUser() as User);
+  }
+
+  getAuthFireUser(): User | null {
+    return this.firebaseAuth.currentUser;
+  }
+
+  getAuthLocalUser(): any {
+    const token = localStorage.getItem('user');
+    return token ? JSON.parse(token) : null;
+  }
+
+  get isLoggedIn(): boolean {
+    const token = localStorage.getItem('user');
+    return token !== 'null' && token !== null;
+  }
+  
+  get logout$() {
+    return this.logoutSubject.asObservable();
+  }
+
+  getUserData(): Observable<any> {
+    return this.userDataSubject.asObservable();
+  }
+
+  registerWithEmailAndPassword(email: string, name: string, password: string): void {
     this.utils.openSpinner();
-    const promise = signInWithEmailAndPassword(
-      this.firebaseAuth,
-      email,
-      password
-    )
-      .then(() => {
-        this.setUserData();
-        this.toastr.success('Logged in Sucessfully');
-        this.router.navigate(['/']);
-        this.utils.closeSpinner();
+    createUserWithEmailAndPassword(this.firebaseAuth, email, password)
+      .then((response) => {
+        this.UserData = response.user;
+        this.sendEmailVerification();
+        updateProfile(response.user, { displayName: name })
+          .then(() => {
+            this.UserData.displayName = name;
+            // this.setUserData();
+            this.toastr.success('Registered Sucessfully');
+            this.router.navigate(['/dashboard']);
+          })
+          .catch((error) => {
+            this.toastr.warning(this.utils.getErrorMessage(error.code));
+          });
       })
       .catch((error) => {
-        this.toastr.warning('Invalid username or password');
-        this.utils.closeSpinner();
-        throw new Error(error);
-      });
-    return from(promise);
+        this.toastr.warning(this.utils.getErrorMessage(error.code));
+      })
+      .finally(() => this.utils.closeSpinner());
   }
 
-  async loginWithGoogle() {
-    // Sign in using a redirect.
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth();
-    auth.useDeviceLanguage();
-    provider.addScope('profile');
-    provider.addScope('email');
-
-  signInWithPopup(auth, provider)
-  .then((result) => {
-    this.setUserData();
-    this.toastr.success('Logged in Sucessfully');
-    this.router.navigate(['/']);
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    console.log(user);
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
+  loginWithEmailAndPassword(email: string, password: string): void {
+    this.utils.openSpinner();
+    signInWithEmailAndPassword( this.firebaseAuth, email, password )
+      .then((response) => {
+        this.UserData = response?.user;
+        this.toastr.success('Logged in Sucessfully');
+        this.router.navigate(['/dashboard']);
+      })
+      .catch((error) => {
+        this.toastr.warning(this.utils.getErrorMessage(error.code));
+      })
+      .finally(() => this.utils.closeSpinner());
   }
 
-  logout() {
-    const promise = signOut(this.firebaseAuth)
+  loginWithGoogleAuth(): void {
+    this.loginWithPopup(new GoogleAuthProvider());
+  }
+
+  loginWithPopup(provider: any): void {
+    this.utils.openSpinner();
+    this.firebaseAuth.useDeviceLanguage();
+    signInWithPopup(this.firebaseAuth, provider)
+      .then((response) => {
+        this.UserData = response.user;
+        this.toastr.success('Logged in Sucessfully');
+        this.router.navigate(['/dashboard']);
+      })
+      .catch((error) => {
+        this.toastr.warning(this.utils.getErrorMessage(error.code));
+      })
+      .finally(() => this.utils.closeSpinner());
+  }
+
+  logout(): void {
+    this.utils.openSpinner();
+    signOut(this.firebaseAuth)
       .then(() => {
-        this.removeUserData();
+        // this.removeUserData();
         this.toastr.success('Logged out Sucessfully');
         this.router.navigate(['/']);
       })
-      .catch((error: string | undefined) => {
-        throw new Error(error);
-      });
-    return from(promise);
+      .catch((error) => {
+        this.toastr.warning(this.utils.getErrorMessage(error.code));
+      })
+      .finally(() => this.utils.closeSpinner());
   }
 
-  isLoggedIn() {
-    return this.loggedIn.asObservable();
+  sendPasswordResetEmail(email: string): void {
+    sendPasswordResetEmail(this.firebaseAuth, email)
+    .then((response) => {
+      const notificationMsg = "We sent an email to " + email + "! If this email is connected to a Sticky Linkz account, you'll be able to reset your password.";
+      this.toastr.success(notificationMsg, 'Email sent');
+    })
+    .catch((error) => {
+      this.toastr.warning(this.utils.getErrorMessage(error.code));
+    })
+    .finally(() => this.utils.closeSpinner());
   }
 
-  setUserData() {
-    const userData = JSON.stringify(this.firebaseAuth.currentUser);
-    sessionStorage.setItem('user', userData);
-    this.loggedIn.next(true);
-    this.isLoggedInGaurd = true;
-  }
-
-  removeUserData() {
-    sessionStorage.clear();
-    this.loggedIn.next(false);
-    this.isLoggedInGaurd = false;
-  }
-
-  getUserData() {
-    const user = sessionStorage.getItem('user');
-    if (user) {
-      return JSON.parse(user);
-    } else {
-    return null;
-    }
-  }
 }

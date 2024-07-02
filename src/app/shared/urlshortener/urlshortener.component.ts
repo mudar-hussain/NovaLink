@@ -18,7 +18,7 @@ export class UrlshortenerComponent implements OnInit {
 
   ngOnInit(): void {
   this.urlForm = this.formBuilder.group({
-      url: ['', [Validators.required, Validators.pattern(this.utils.getUrlRegexPattern())]]
+      url: [null, [Validators.required, Validators.pattern(this.utils.getUrlRegexPattern())]]
     });
     
   }
@@ -28,13 +28,12 @@ export class UrlshortenerComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.urlForm)
     if(this.urlForm.valid) {
       this.shortenedUrlData.emit(this.urlForm.get('url')?.value);
       this.urlForm.get('url')?.setValue(null);
       this.urlForm.markAsUntouched();
     } else {
-      console.log('URL Invalid');
+      this.utils.toastError(null, 'URL Invalid');
     }
   }
 }

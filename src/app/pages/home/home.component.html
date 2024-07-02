@@ -1,47 +1,73 @@
-<div class="container">
+<ng-container *ngIf="!this.authService.isLoggedIn">
+<div class="container mt-3">
   <h1 class="heading">Make URLs Short and Crisp</h1>
   <p>
     <span class="lobster-font">Sticky Linkz</span>
     : The ultimate link shortener for tracking, branding, and sharing the shortest URLs in the world!
   </p>
+  
   <!-- Url Input container -->
   <app-urlshortener (shortenedUrlData)="shortenedUrlData($event)"></app-urlshortener>
 
   <!-- URL list container -->
-  <ng-container *ngIf="shortenedUrlList.length > 0">
-    
-<div class="container mt-5 mb-5">
+    <div class="container mt-5 mb-5">
 
-  <table class="table">
-    <tr>
-      <th>Shortened URL</th>
-      <th>Original URL</th>
-      <th>Active</th>
-      <th>Expires At</th>
-      <th>Actions</th>
-    </tr>
+      <table class="table">
+        <tr>
+          <th>Shortened URL</th>
+          <th>Original URL</th>
+          <th>Active</th>
+          <th>Expires At</th>
+          <th>Actions</th>
+        </tr>
 
-      <tr *ngFor="let url of shortenedUrlList">
-        <td>{{url.short_url}}</td>
-        <td>{{url.long_url}}</td>
-        <td [ngStyle]="{'color': url.active ? 'green' : 'red'}"><i class="fas fa-circle"></i></td>
-        <td>{{this.utils.convertToLocaleDateTime(url.expire_at_datetime)}}</td>
-        <td>
-          <div class="url-actions">
-            <button class="btn btn-theme-primary" (click)="shareUrl(url)" data-toggle="tooltip" data-placement="top"
-              title="Share"><i class="fas fa-share"></i></button>
-            <button class="btn btn-theme-primary" (click)="editUrl(url)" data-toggle="tooltip" data-placement="top"
-              title="Edit"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-theme-primary" (click)="copyUrlToClipboard('Link Copied', url.short_url)"
-              data-toggle="tooltip" data-placement="top" title="Copy"><i class="fas fa-copy"></i></button>
-            <button class="btn btn-theme-primary" (click)="deleteUrl(url)" data-toggle="tooltip" data-placement="top"
-              title="Delete"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </td>
-      </tr>
-  </table>
+        <tr *ngFor="let url of shortenedUrlList">
+          <td data-toggle="tooltip" data-placement="top" [title]="url.short_url">{{url.short_url}}</td>
+          <td data-toggle="tooltip" data-placement="top" [title]="url.long_url">{{ this.utils.truncateText(url.long_url, 20) }}</td>
+          <td [ngStyle]="{'color': this.urlService.isUrlActive(url) ? 'green' : 'red'}"><i class="fas fa-circle"></i></td>
+          <td>{{this.utils.convertToLocaleDateTime(url.expire_at_datetime)}}</td>
+          <td>
+            <div class="url-actions">
+              <button class="btn btn-theme-primary" data-toggle="tooltip" data-placement="top"
+                data-toggle="modal" data-target="#authModal" title="QR Code"><i class="fas fa-qrcode"></i></button>
+                <button class="btn btn-theme-primary" data-toggle="tooltip" data-placement="top"
+                  data-toggle="modal" data-target="#authModal" title="Share"><i class="fas fa-share"></i></button>
+              <button class="btn btn-theme-primary" data-toggle="tooltip" data-placement="top"
+                data-toggle="modal" data-target="#authModal" title="Edit"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-theme-primary" (click)="copyUrlToClipboard('Link Copied', url.short_url)"
+                data-toggle="tooltip" data-placement="top" title="Copy"><i class="fas fa-copy"></i></button>
+              <button class="btn btn-theme-primary" (click)="deleteUrl(url)" data-toggle="tooltip" data-placement="top"
+                title="Delete"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </td>
+        </tr>
+        <ng-container *ngIf="shortenedUrlList.length === 0"><p>No Records Found</p></ng-container>
+      </table>
+    </div>
 </div>
-  </ng-container>
-</div>
+</ng-container>
 
-<app-bookmark></app-bookmark>
+  <!-- If user is logged in -->
+
+<ng-container *ngIf="this.authService.isLoggedIn">
+  <div class="container">
+    <h1 class="heading">Welcome back, {{this.authService.UserData?.displayName}}!</h1>
+    <h5 class="mt-4">
+      Ready to make your URLs short and crisp with <span class="lobster-font">Sticky Linkz</span> ? 
+    </h5>
+  </div>   
+  <div class="container mt-4 mb-5">
+    <button
+      type="button"
+      class="btn-theme-primary dashboard"
+      routerLink="/dashboard"
+    >
+      Go To Dashboard >
+    </button>
+  </div>
+</ng-container>
+
+<!-- Utilities -->
+<app-login [action]="this.action"></app-login>
+<!-- <app-bookmark></app-bookmark> -->
+

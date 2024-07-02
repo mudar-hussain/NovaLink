@@ -52,16 +52,4 @@ input {
 .btn {
     border-radius: 20px;
 }
-
-.border-bottom {
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .text-danger {
-    font-size: 0.875rem;
-  }
-  .hover-underline:hover {
-    text-decoration: underline;
-  }
-
   

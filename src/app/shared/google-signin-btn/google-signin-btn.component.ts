@@ -11,6 +11,6 @@ export class GoogleSigninBtnComponent {
   constructor(private authService: AuthService) {}
 
   loginWithGoogle() {
-    this.authService.loginWithGoogle();
+    this.authService.loginWithGoogleAuth();
   }
 }

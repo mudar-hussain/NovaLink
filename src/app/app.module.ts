@@ -18,7 +18,6 @@ import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { UrlshortenerComponent } from './shared/urlshortener/urlshortener.component';
 import { BookmarkComponent } from './shared/bookmark/bookmark.component';
@@ -26,6 +25,10 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { UrlFormComponent } from './shared/url-form/url-form.component';
 import { GoogleSigninBtnComponent } from './shared/google-signin-btn/google-signin-btn.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
+import { ResetPasswordComponent } from './shared/reset-password/reset-password.component';
+import { ShareUrlComponent } from './shared/share-url/share-url.component';
+import { QrCodeComponent } from './shared/qr-code/qr-code.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   declarations: [
@@ -34,13 +37,15 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    RegisterComponent,
     DashboardComponent,
     UrlshortenerComponent,
     BookmarkComponent,
     UrlFormComponent,
     GoogleSigninBtnComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ResetPasswordComponent,
+    ShareUrlComponent,
+    QrCodeComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +56,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
     BrowserAnimationsModule,
     ClipboardModule,
     ReactiveFormsModule,
+    QRCodeModule,
     ToastrModule.forRoot()
   ],
   providers: [

@@ -1,0 +1,35 @@
+<!-- src/app/app.component.html -->
+<div class="modal fade" id="shareUrlModal" tabindex="-1" role="dialog" aria-labelledby="shareUrlModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="container left">
+            <img src="../../../assets/img/logo.png" alt="Sticky Linkz Logo" class="logo"
+              style="width: 60px; height:60px;">
+            <div class="lobster-font title">Sticky Linkz</div>
+          </div>
+  
+          <div class="container right">
+            <button id="closeModal" type="button" class="close ml-auto btn-theme-primary" data-dismiss="modal" aria-label="Close"
+              style="font-size: large;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center mb-3">Share Your Linkz</h4>
+          <form #shareUrlForm="ngForm" (ngSubmit)="onSubmit(shareUrlForm)">
+            <div class="form-group mb-3">
+              <input type="email" class="form-control" name="email" ngModel required email placeholder="Email"
+                #email="ngModel">
+              <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+                <div *ngIf="email.errors?.['required']">Email is required.</div>
+                <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-theme-secondary w-100" [disabled]="shareUrlForm.invalid">Share ></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

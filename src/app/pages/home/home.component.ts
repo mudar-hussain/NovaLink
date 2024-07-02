@@ -1,123 +1,160 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
-import { ToastrService } from 'ngx-toastr';
 import { UrlData } from 'src/app/models/urlData';
+import { Auth } from 'src/app/models/auth.enum';
 import { ConfigService } from 'src/app/services/config.service';
 import { UrlService } from 'src/app/services/url.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { take } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
   url: string = '';
   shortenedUrlList: Array<UrlData> = [];
   urlData!: UrlData;
-  domainUrl: string = "";
-  urlReg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
-  constructor(private urlService: UrlService,
-    private toastr: ToastrService,
+  domainUrl: string = '';
+  action: string = Auth.login;
+
+  constructor(
+    protected urlService: UrlService,
     private configService: ConfigService,
-  protected utils: UtilsService) {
+    protected utils: UtilsService,
+    protected authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.domainUrl = this.configService.getDomainUrl();
   }
 
   ngOnInit(): void {
-    this.shortenedUrlList.push({
-      long_url: "long_url",
-      short_id: null,
-      short_url: this.domainUrl+'1',
-      active: false,
-      email: null,
-      notes: null,
-      expire_at_datetime: Timestamp.fromDate(new Date(Date.now() + (1 * 60 * 1000))),
-      created_at: Timestamp.fromDate(new Date()),
-      updated_at: Timestamp.fromDate(new Date()),
-      id: null
-    } as UrlData);
-    this.shortenedUrlList.push({
-      long_url: "long_url",
-      short_id: null,
-      short_url: this.domainUrl+'2',
-      active: false,
-      email: null,
-      notes: null,
-      expire_at_datetime: Timestamp.fromDate(new Date(Date.now() + (2 * 60 * 1000))),
-      created_at: Timestamp.fromDate(new Date()),
-      updated_at: Timestamp.fromDate(new Date()),
-      id: null
-    } as UrlData);
-    this.shortenedUrlList.push({
-      long_url: "long_url",
-      short_id: null,
-      short_url: this.domainUrl+'3',
-      active: false,
-      email: null,
-      notes: null,
-      expire_at_datetime: Timestamp.fromDate(new Date(Date.now() + (3 * 60 * 1000))),
-      created_at: Timestamp.fromDate(new Date()),
-      updated_at: Timestamp.fromDate(new Date()),
-      id: null
-    } as UrlData);
+    this.route.params.subscribe((params: any) => {
+      const id = params['id'];
+      if (id) {
+        this.handleRedirect(id);
+      }
+    });
+    const storedList = localStorage.getItem('shortenedUrlList');
+    if (storedList) {
+      this.shortenedUrlList = JSON.parse(storedList, this.dateReviver);
+    } else {
+      this.shortenedUrlList = [];
+    }
   }
 
+  handleRedirect(id: string): void {
+    this.urlService
+      .getUrlByShortId(id)
+      .pipe(take(1))
+      .subscribe((data: UrlData[]) => {
+        const urlData = data.length > 0 ? data[0] : null;
+        if (urlData && urlData.long_url) {
+          if (this.urlService.isUrlActive(urlData)) {
+            let longUrl = urlData.long_url;
+
+            // Check if the URL is absolute
+            if (!/^https?:\/\//i.test(longUrl)) {
+              longUrl = 'https://' + longUrl; // or use 'https://' if your URLs are HTTPS
+            }
+            window.open(longUrl, '_blank');
+          }
+
+          // Redirect current tab to home page
+          this.router.navigate(['/']);
+        } else {
+          // Handle case where ID is not found or invalid
+          this.router.navigate(['/']);
+        }
+      });
+  }
+
+  
+
   shortenedUrlData(long_url: string) {
-    const currentDate = new Date();
-    currentDate.setTime(currentDate.getTime() + 10 * 60 * 1000);
     this.urlData = {
       long_url: long_url,
       short_id: null,
       short_url: this.domainUrl,
-      active: false,
+      active: true,
       email: null,
       notes: null,
-      expire_at_datetime: Timestamp.fromDate(new Date(Date.now() + (10 * 60 * 1000))),
+      expire_at_datetime: this.utils.get24HoursFromNow(),
       created_at: Timestamp.fromDate(new Date()),
       updated_at: Timestamp.fromDate(new Date()),
-      id: null
-    }
+      id: null,
+    };
     this.generateShortUrl(this.urlData);
   }
 
   generateShortUrl(urlData: UrlData) {
-    this.urlService.generateShortUrl(urlData)
+    this.utils.openSpinner();
+    this.urlService
+      .generateShortUrl(urlData)
       .then((data) => {
         this.shortenedUrlList.push(data);
-        this.copyUrlToClipboard("Short Link Created", data.short_url);
+        localStorage.setItem('shortenedUrlList', JSON.stringify(this.shortenedUrlList));
+        this.copyUrlToClipboard('Short Link Created', data.short_url);
       })
       .catch((err) => {
         console.error('Error generating short URL:', err);
-      });
-  }
-
-  shareUrl(urlData: UrlData) {
-
-  }
-
-  editUrl(urlData: UrlData) {
-
+      })
+      .finally(() => this.utils.closeSpinner());
   }
 
   copyUrlToClipboard(title: string, short_url: string) {
-    if(this.utils.copyToClipboard(short_url)){
-      this.toastr.success(short_url + ' has been copied to your clipboard', title);
+    if (this.utils.copyToClipboard(short_url)) {
+      this.utils.toastSuccess(
+        title,
+        short_url + ' has been copied to your clipboard'
+      );
     } else {
-      this.toastr.success('Your short link is ready: ' + short_url, title);
+      this.utils.toastSuccess(title, 'Your short link is ready: ' + short_url);
     }
   }
 
   deleteUrl(urlData: UrlData) {
     if (urlData.id != null) {
-    this.urlService.deleteUrl(urlData.id).then(() => {
-      this.shortenedUrlList = this.shortenedUrlList.filter(item => item.short_url !== urlData.short_url);
-      this.toastr.error(urlData.short_url + ' is deleted successfully', 'Short Link Deleted');
-    }).catch((e) => console.log(e));
+      this.urlService
+        .deleteUrl(urlData.id)
+        .then(() => {
+          this.shortenedUrlList = this.shortenedUrlList.filter(
+            (item) => item.short_url !== urlData.short_url
+          );
+          localStorage.setItem('shortenedUrlList', JSON.stringify(this.shortenedUrlList));
+          this.utils.toastError(
+            'Short Link Deleted',
+            urlData.short_url + ' is deleted successfully'
+          );
+        })
+        .catch((e) => this.utils.toastError('Error', e));
     } else {
-      this.shortenedUrlList = this.shortenedUrlList.filter(item => item.short_url !== urlData.short_url);
-      this.toastr.error(urlData.short_url + ' is deleted successfully', 'Short Link Deleted');
+      this.shortenedUrlList = this.shortenedUrlList.filter(
+        (item) => item.short_url !== urlData.short_url
+      );
+      this.utils.toastError(
+        'Short Link Deleted',
+        urlData.short_url + ' is deleted successfully'
+      );
     }
-    console.log(this.shortenedUrlList);
   }
+
+  // Define the reviver function
+dateReviver(key: string, value: any): any {
+  if (key == 'expire_at_datetime') {
+    // Handle the case where the value might be an object with toDate method
+    if (typeof value === 'object' && value !== null && typeof value.toDate === 'function') {
+      return value.toDate();
+    }
+    if (value && typeof value.seconds === 'number' && typeof value.nanoseconds === 'number') {
+      return new Date(value.seconds * 1000 + value.nanoseconds / 1e6);
+    }
+  }
+  return value;
+}
+
 }
