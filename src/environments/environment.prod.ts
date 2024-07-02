@@ -12,7 +12,6 @@ export const environment = {
   linkedinProfileUrl: 'https://www.linkedin.com/in/mudar-hussain/',
   newsletterUrl: 'https://www.linkedin.com/newsletters/7189975110357790720/',
   githubProfileUrl: 'https://github.com/mudar-hussain/',
-  // domainUrl: 'https://stickylinkz.web.app/'
-  domainUrl: 'localhost:4200/',
+  domainUrl: 'https://stickylinkz.web.app/',
   defaultProfilePic: 'https://api.dicebear.com/5.x/initials/svg?seed='
 };
