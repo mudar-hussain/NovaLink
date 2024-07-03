@@ -1,7 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { ConfigData } from '../models/config';
-import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
@@ -12,8 +11,7 @@ export class ConfigService implements OnInit {
     newsletterUrl: environment.newsletterUrl,
     linkedinProfileUrl: environment.linkedinProfileUrl,
     githubProfileUrl: environment.githubProfileUrl,
-    domainUrl: environment.domainUrl,
-    defaultProfilePic: environment.defaultProfilePic
+    domainUrl: environment.domainUrl
   }
 
   constructor(private firestore: Firestore) { 
@@ -35,9 +33,5 @@ export class ConfigService implements OnInit {
 
   getDomainUrl() {
     return this.configData.domainUrl;
-  }
-
-  getDefaultProfilePic(firstLetter: string) {
-    return this.configData.defaultProfilePic + firstLetter;
   }
 }

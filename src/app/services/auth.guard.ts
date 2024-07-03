@@ -1,4 +1,4 @@
-import { Injectable, NgZone, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -11,8 +11,7 @@ class PermissionsService {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toastr: ToastrService,
-    private ngZone: NgZone
+    private toastr: ToastrService
   ) {}
 
   canActivate(
@@ -24,9 +23,7 @@ class PermissionsService {
       return true;
     } else {
       this.toastr.warning('Access Denied!');
-      this.ngZone.run(() => {
-        this.router.navigate(['/']);
-      });
+      this.router.navigate(['/'])
       return false;
     }
   }
